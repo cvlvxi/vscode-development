@@ -4,7 +4,7 @@ const perf = require("perf_hooks")
 
 let mark1 = perf.performance.mark("mark1")
 
-mark1.entries
+
 setTimeout(() => {}, 2000)
 
 let myMarks = ["mark1"]

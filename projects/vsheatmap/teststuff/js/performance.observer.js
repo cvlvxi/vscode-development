@@ -28,3 +28,6 @@ function print_PerformanceEntry(perfEntry) {
 }
 
 
+// ▶ node performance.observer.js 
+// [ 'function', 'gc', 'http', 'http2', 'mark', 'measure' ]
+console.log(perf.PerformanceObserver.supportedEntryTypes)

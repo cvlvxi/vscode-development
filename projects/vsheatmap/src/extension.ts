@@ -3,7 +3,6 @@ import { FileMap, Stats } from './types';
 import { handleCurrentLine } from "./capture"
 import { init } from "./utils"
 
-
 export function activate(context: vscode.ExtensionContext) {
 
 	init();
