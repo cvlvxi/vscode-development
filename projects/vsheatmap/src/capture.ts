@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { performance } from 'perf_hooks';
 import { activeInfo, bad } from './utils';
 import { ActiveEditorCurrentInfo } from './types';
 
@@ -12,20 +11,26 @@ export function handleCurrentLine(activeEditor: vscode.TextEditor) {
   let currInfo: ActiveEditorCurrentInfo = globalThis.currentInfo!;
   let stats = globalThis.stats;
 
-  stats.initFile(info);
+  stats.init(info);
 
   if (globalThis.atStart) {
-    globalThis.currentInfo = info
+    globalThis.currentInfo = info;
     globalThis.atStart = false;
     return;
   }
 
-  if (globalThis.currentInfo !== info) {
-    stats.getLine(currInfo)?.end();
+  if (currInfo !== info) {
+    if (currInfo.fileLineNumber !== info.fileLineNumber) {
+      stats.endLine(currInfo);
+      let line = stats.getLine(info);
+      line!.timesVisited += 1;
+      line!.start();
+    }
+    stats.endChar(currInfo)!;
+    let char = stats.getChar(info);
+    char!.timesVisited += 1;
+    char!.start();
   }
-  let line = stats.getLine(info);
-  line!.timesVisited += 1;
-  line!.start();
   globalThis.currentInfo = info;
 }
 
