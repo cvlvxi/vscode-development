@@ -1,3 +1,12 @@
 [submodule "forks/cvlvxi-todo-tree"]
 	path = forks/cvlvxi-todo-tree
 	url = git@github.com:cvlvxi/todo-tree.git
+[submodule "forks/cvlvxi-output-colorizer"]
+	path = forks/cvlvxi-output-colorizer
+	url = git@github.com:cvlvxi/OutputColorizer.git
+[submodule "forks/cvlvxi-vscode-blockman"]
+	path = forks/cvlvxi-vscode-blockman
+	url = git@github.com:cvlvxi/vscode-blockman.git
+[submodule "forks/cvlvxi-vscode-list-symbols"]
+	path = forks/cvlvxi-vscode-list-symbols
+	url = git@github.com:cvlvxi/vscode-list-symbols.git
