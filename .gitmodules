@@ -10,3 +10,15 @@
 [submodule "forks/cvlvxi-vscode-list-symbols"]
 	path = forks/cvlvxi-vscode-list-symbols
 	url = git@github.com:cvlvxi/vscode-list-symbols.git
+[submodule "forks/cvlvxi-vscode-api-playground"]
+	path = forks/cvlvxi-vscode-api-playground
+	url = git@github.com:cvlvxi/vscode-api-playground.git
+[submodule "forks/cvlvxi-datetime"]
+	path = forks/cvlvxi-datetime
+	url = git@github.com:cvlvxi/DateTime.git
+[submodule "forks/cvlvxi-error-lens"]
+	path = forks/cvlvxi-error-lens
+	url = git@github.com:cvlvxi/vscode-error-lens.git
+[submodule "forks/cvlvxi-vscode-vim"]
+	path = forks/cvlvxi-vscode-vim
+	url = git@github.com:cvlvxi/Vim.git
