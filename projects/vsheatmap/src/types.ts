@@ -1,4 +1,5 @@
 import { performance, PerformanceObserver } from 'perf_hooks';
+import { OutputChannel } from 'vscode';
 import { bad } from "./utils";
 
 export class ActiveEditorCurrentInfo {
@@ -52,7 +53,7 @@ export class Line extends Perf {
     super(`${fileName}:${lineNumber}`);
     this.lineNumber = lineNumber;
     this.fileName = fileName;
-    this.timesVisited = 0;
+    this.timesVisited = 1;
     this.start();
   }
 }
@@ -76,6 +77,17 @@ export class Stats {
   constructor() {
     this.filestats = new Map();
     this.registerObservers();
+  }
+
+  log(out: OutputChannel) {
+    this.filestats.forEach((f: File, filename: string) => {
+      out.appendLine(`FILE: ${filename}`);
+      f.linestats.forEach((l: Line, lineNumber: number) => {
+        out.appendLine(`\tLINE_NUMBER: ${lineNumber}`);
+        out.appendLine(`\t\tdurationMs: ${l.totalDuration}`);
+        out.appendLine(`\t\ttimesVisited: ${l.timesVisited}`);
+      });
+    })
   }
 
   getLine(info: ActiveEditorCurrentInfo): Line | undefined {

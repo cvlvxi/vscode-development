@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { activeInfo } from './utils'
 import { handleCurrentLine } from "./capture";
 import { init } from "./utils";
 
@@ -17,8 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   let stopRecording = vscode.commands.registerCommand('vsheatmap.stopRecording', () => {
+    globalThis.stats.getLine(globalThis.currentInfo!)
     vscode.window.showInformationMessage("Stopped Recording!");
     globalThis.IS_RECORDING = false;
+    globalThis.stats.log(globalThis.out);
     init();
   });
 

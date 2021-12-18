@@ -22,11 +22,10 @@ export function handleCurrentLine(activeEditor: vscode.TextEditor) {
 
   if (globalThis.currentInfo !== info) {
     stats.getLine(currInfo)?.end();
-  } else {
-    let line = stats.getLine(info);
-    line!.timesVisited += 1;
-    line!.start();
   }
+  let line = stats.getLine(info);
+  line!.timesVisited += 1;
+  line!.start();
   globalThis.currentInfo = info;
 }
 
