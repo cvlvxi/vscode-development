@@ -70,7 +70,7 @@ export class HeatmapViewPanel {
 
         <style>
             #chart {
-                max-width: 650px;
+                max-width: 1200px;
                 margin: 35px auto;
             }
         </style>

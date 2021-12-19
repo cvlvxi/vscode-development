@@ -8,21 +8,21 @@ export class ActiveEditorCurrentInfo {
   fileLineNumber: number;
   fileLineCount: number;
   characterPos: number;
-  language: string;
+  lang: string;
 
   constructor(
     fileName: string,
     fileLineNumber: number,
     fileLineCount: number,
     characterPos: number,
-    langauge: string
+    lang: string
 
   ) {
     this.fileName = fileName;
     this.fileLineNumber = fileLineNumber;
     this.fileLineCount = fileLineCount;
     this.characterPos = characterPos;
-    this.language = language;
+    this.lang = lang;
   }
 }
 
@@ -73,11 +73,15 @@ export class Char extends Perf {
 export class File {
   fileName: string;
   lineCount: number;
+  linesCount: number[];
+  maxLineCount: number;
   linestats: Map<number, Line>;
 
-  constructor(fileName: string, lineCount: number) {
+  constructor(fileName: string, lineCount: number, maxLineCount: number, linesCount: number[]) {
     this.fileName = fileName;
     this.lineCount = lineCount;
+    this.linesCount = linesCount;
+    this.maxLineCount = maxLineCount;
     this.linestats = new Map();
   }
 }
@@ -99,7 +103,9 @@ export class Stats {
     this.filestats.forEach((f: File, fname: string) => {
       stats[fname] = {
         lineCount: f.lineCount,
-        linestats: {}
+        linestats: {},
+        linesCount: f.linesCount,
+        maxLineCount: f.maxLineCount
       }
       f.linestats.forEach((l: Line, lineNumber: number) => {
         let linestats = {
@@ -157,7 +163,7 @@ export class Stats {
     return this.filestats.get(info.fileName)?.linestats?.get(info.fileLineNumber)?.charstats.get(info.characterPos);
   }
 
-  init(info: ActiveEditorCurrentInfo) {
+  init(info: ActiveEditorCurrentInfo, activeEditor: vscode.TextEditor) {
     let {
       fileName: fname,
       fileLineCount: flcount,
@@ -168,7 +174,14 @@ export class Stats {
     let line;
     let char;
     if (!(file = this.filestats.get(fname))) {
-      file = this.filestats.set(fname, new File(fname, flcount));
+      // Get the lines count of the document
+      let linesCount: number[] = []
+      let maxLineCount = 0
+      activeEditor.document.getText().split('\n').forEach((line: string) => {
+        if (line.length > maxLineCount) maxLineCount = line.length
+        linesCount.push(line.length)
+      })
+      file = this.filestats.set(fname, new File(fname, flcount, maxLineCount, linesCount));
     }
     if (!(line = this.filestats.get(fname)!.linestats.get(flinenum))) {
       this.filestats.get(fname)!.linestats.set(flinenum, new Line(fname, flinenum));

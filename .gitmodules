@@ -22,3 +22,6 @@
 [submodule "forks/cvlvxi-vscode-vim"]
 	path = forks/cvlvxi-vscode-vim
 	url = git@github.com:cvlvxi/Vim.git
+[submodule "forks/cvlvxi-vscode-counter"]
+	path = forks/cvlvxi-vscode-counter
+	url = git@github.com:cvlvxi/vscode-counter.git

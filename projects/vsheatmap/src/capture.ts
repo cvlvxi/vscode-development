@@ -11,7 +11,7 @@ export function handleCurrentLine(activeEditor: vscode.TextEditor) {
   let currInfo: ActiveEditorCurrentInfo = globalThis.currentInfo!;
   let stats = globalThis.stats;
 
-  stats.init(info);
+  stats.init(info, activeEditor);
 
   if (globalThis.atStart) {
     globalThis.currentInfo = info;
