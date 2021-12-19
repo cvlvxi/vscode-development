@@ -28,6 +28,7 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
+		"bundle": "esbuild public/apex.js --bundle --outfile=public/apex-built.js",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "yarn run compile && yarn run lint",
@@ -42,6 +43,8 @@
 		"@typescript-eslint/eslint-plugin": "^5.1.0",
 		"@typescript-eslint/parser": "^5.1.0",
 		"@vscode/test-electron": "^1.6.2",
+		"apexcharts": "^3.32.0",
+		"esbuild": "^0.14.5",
 		"eslint": "^8.1.0",
 		"glob": "^7.1.7",
 		"mocha": "^9.1.3",
