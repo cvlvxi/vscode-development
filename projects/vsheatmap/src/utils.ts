@@ -22,6 +22,7 @@ export function activeInfo(activeEditor: TextEditor): ActiveEditorCurrentInfo {
     activeEditor.document.fileName,
     activeEditor.selection.active.line + 1, // 0 based
     activeEditor.document.lineCount,
-    activeEditor.selection.start.character + 1 // 0 based
+    activeEditor.selection.start.character + 1, // 0 based
+    activeEditor.document.languageId,
   );
 }

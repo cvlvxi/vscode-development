@@ -4,22 +4,25 @@ import { bad } from "./utils";
 import * as vscode from "vscode";
 
 export class ActiveEditorCurrentInfo {
-
   fileName: string;
   fileLineNumber: number;
   fileLineCount: number;
   characterPos: number;
+  language: string;
 
   constructor(
     fileName: string,
     fileLineNumber: number,
     fileLineCount: number,
-    characterPos: number
+    characterPos: number,
+    langauge: string
+
   ) {
     this.fileName = fileName;
     this.fileLineNumber = fileLineNumber;
     this.fileLineCount = fileLineCount;
     this.characterPos = characterPos;
+    this.language = language;
   }
 }
 
@@ -89,6 +92,34 @@ export class Stats {
     this.filestats = new Map();
     this.obs = this.registerObserver();
     this.updating = undefined;
+  }
+
+  toJson() {
+    let stats: any = {}
+    this.filestats.forEach((f: File, fname: string) => {
+      stats[fname] = {
+        lineCount: f.lineCount,
+        linestats: {}
+      }
+      f.linestats.forEach((l: Line, lineNumber: number) => {
+        let linestats = {
+          lineNumber: l.lineNumber,
+          timesVisited: l.timesVisited,
+          totalDuration: l.totalDuration,
+          charstats: {}
+        }
+        stats[fname].linestats[lineNumber] = linestats
+        l.charstats.forEach((c: Char, charNumber: number) => {
+          let charstats = {
+            charNumber: c.charNumber,
+            timesVisited: c.timesVisited,
+            totalDuration: c.totalDuration
+          }
+          stats[fname].linestats[lineNumber].charstats[charNumber] = charstats
+        })
+      })
+    })
+    return stats
   }
 
   log(out: OutputChannel) {

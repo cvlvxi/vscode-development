@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { Stats } from "./types"
 
 export class HeatmapViewPanel {
     public static currentPanel: HeatmapViewPanel | undefined;
@@ -9,55 +10,13 @@ export class HeatmapViewPanel {
     private readonly _extensionUri: vscode.Uri;
     private _disposables: vscode.Disposable[] = [];
 
-    public static getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
-        return {
-            enableScripts: true,
-            localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'public')]
-        };
-    }
-
-    public static createOrShow(extensionUri: vscode.Uri) {
-        const column = vscode.window.activeTextEditor
-            ? vscode.window.activeTextEditor.viewColumn
-            : undefined;
-
-        // If we already have a panel, show it.
-        if (HeatmapViewPanel.currentPanel) {
-            HeatmapViewPanel.currentPanel._panel.reveal(column);
-            return;
-        }
-
-        // Otherwise, create a new panel.
-        const panel = vscode.window.createWebviewPanel(
-            HeatmapViewPanel.viewType,
-            'HeatmapView',
-            column || vscode.ViewColumn.One,
-            this.getWebviewOptions(extensionUri),
-        );
-
-        HeatmapViewPanel.currentPanel = new HeatmapViewPanel(panel, extensionUri);
-    }
-
-    public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-        HeatmapViewPanel.currentPanel = new HeatmapViewPanel(panel, extensionUri);
-    }
-
-    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+    constructor(stats: Stats, out: vscode.OutputChannel, panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
         this._panel = panel;
+        // Send to webview
+        this._panel.webview.postMessage({ stats: stats.toJson() });
         this._extensionUri = extensionUri;
         this._panel.webview.html = this.getHtml()
-        // this._update();
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-        // this._panel.onDidChangeViewState(
-        // 	e => {
-        // 		if (this._panel.visible) {
-        // 			this._update();
-        // 		}
-        // 	},
-        // 	null,
-        // 	this._disposables
-        // );
-
         this._panel.webview.onDidReceiveMessage(
             message => {
                 switch (message.command) {
@@ -71,11 +30,13 @@ export class HeatmapViewPanel {
         );
     }
 
-    public doRefactor() {
-        // Send a message to the webview webview.
-        // You can send any JSON serializable data.
-        this._panel.webview.postMessage({ command: 'refactor' });
+    public static getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
+        return {
+            enableScripts: true,
+            localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'public')]
+        };
     }
+
 
     public dispose() {
         HeatmapViewPanel.currentPanel = undefined;
@@ -92,13 +53,8 @@ export class HeatmapViewPanel {
     }
 
     private getHtml() {
-        // Local path to main script run in the webview
         const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'public', 'apex-built.js');
-
-        // And the uri we use to load this script in the webview
         const scriptUri = (scriptPathOnDisk).with({ 'scheme': 'vscode-resource' });
-
-        // Use a nonce to only allow specific scripts to be run
         const nonce = getNonce();
 
         return `

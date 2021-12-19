@@ -22,19 +22,14 @@ export function activate(context: vscode.ExtensionContext) {
     globalThis.stats.obs!.disconnect()
     vscode.window.showInformationMessage("Stopped Recording!");
     globalThis.IS_RECORDING = false;
-
-    HeatmapViewPanel.createOrShow(context.extensionUri)
-    if (vscode.window.registerWebviewPanelSerializer) {
-      // Make sure we register a serializer in activation event
-      vscode.window.registerWebviewPanelSerializer(HeatmapViewPanel.viewType, {
-        async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
-          console.log(`Got state: ${state}`);
-          // Reset the webview options so we use latest uri for `localResourceRoots`.
-          webviewPanel.webview.options = HeatmapViewPanel.getWebviewOptions(context.extensionUri);
-          HeatmapViewPanel.revive(webviewPanel, context.extensionUri);
-        }
-      });
-    }
+    // Otherwise, create a new panel.
+    const panel = vscode.window.createWebviewPanel(
+        HeatmapViewPanel.viewType,
+        'HeatmapView',
+        vscode.ViewColumn.One,
+        HeatmapViewPanel.getWebviewOptions(context.extensionUri)
+    );
+    const h = new HeatmapViewPanel(globalThis.stats, globalThis.out, panel, context.extensionUri)
     init();
   });
 
