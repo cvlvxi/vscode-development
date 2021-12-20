@@ -2,6 +2,7 @@ import { performance, PerformanceObserver, PerformanceObserverEntryList } from '
 import { OutputChannel } from 'vscode';
 import { bad } from "./utils";
 import * as vscode from "vscode";
+import { listenerCount } from 'process';
 
 export class ActiveEditorCurrentInfo {
   fileName: string;
@@ -86,6 +87,28 @@ export class File {
   }
 }
 
+export type SerializedStats = Record<string, SerializedFile>
+
+export interface SerializedFile {
+  lineCount: number;
+  linesCount: number[];
+  maxLineCount: number;
+  linestats: Record<number, SerializedLine>
+}
+
+export interface SerializedLine {
+  lineNumber: number;
+  timesVisited: number;
+  totalDuration: number;
+  charstats: Record<number, SerializedChar>
+}
+
+export interface SerializedChar {
+  charNumber: number;
+  timesVisited: number;
+  totalDuration: number;
+}
+
 export class Stats {
 
   filestats: Map<string, File>;
@@ -98,8 +121,8 @@ export class Stats {
     this.updating = undefined;
   }
 
-  toJson() {
-    let stats: any = {}
+  toJson(): SerializedStats {
+    let stats: SerializedStats = {} as SerializedStats
     this.filestats.forEach((f: File, fname: string) => {
       stats[fname] = {
         lineCount: f.lineCount,
