@@ -3,7 +3,7 @@ import { SerializedStats, SerializedChar, SerializedFile, SerializedLine } from 
 
 window.addEventListener('message', event => {
   const stats = event.data; // The json data that the extension sent
-  // console.log(stats)
+  console.log(stats)
   var chart = new ApexCharts(document.querySelector("#chart"), generateSeriesData(stats));
   chart.render();
 });
@@ -57,7 +57,7 @@ function generateSeriesData(data: any) {
       }
     },
     dataLabels: {
-      enabled: true,
+      enabled: false,
       style: {
         colors: ['#fff']
       }
@@ -95,12 +95,13 @@ function generateSeriesData(data: any) {
     return series
   }
 
-  for(let line_idx=0; line_idx < lineCount; ++line_idx) {
+  for(let line_idx=lineCount-1; line_idx >= 0 ; --line_idx) {
     options.series.push({
       name: `line-${line_idx}`,
       data: generateSeriesLineData(line_idx, maxLineCount, linestats)
     })
   }
+  console.log(options)
   return options
 }
 
