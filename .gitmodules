@@ -25,3 +25,9 @@
 [submodule "forks/cvlvxi-vscode-counter"]
 	path = forks/cvlvxi-vscode-counter
 	url = git@github.com:cvlvxi/vscode-counter.git
+[submodule "forks/cvlvxi-vscode-clangd"]
+	path = forks/cvlvxi-vscode-clangd
+	url = git@github.com:cvlvxi/vscode-clangd.git
+[submodule "forks/cvlvxi/vscode-line-history"]
+	path = forks/cvlvxi/vscode-line-history
+	url = https://github.com/quark-zju/vscode-line-history.git
